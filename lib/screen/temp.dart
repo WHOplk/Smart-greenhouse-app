@@ -28,7 +28,7 @@ class _TempPageState extends State<TempPage> {
   void triggerFirebaseButton() async {
     final ref = FirebaseDatabase.instance.ref('Fib_Buttons/Fib_Button4');
 
-    await ref.set(64); // ส่งค่า 1
+    await ref.set(64);
   }
 
   void _listenAirTemp() {
@@ -64,7 +64,7 @@ class _TempPageState extends State<TempPage> {
       final modeValue = event.snapshot.value;
       if (modeValue != null) {
         setState(() {
-          isManualMode = modeValue.toString() == '1'; // 1 = Manual, 0 = Auto
+          isManualMode = modeValue.toString() == '1';
         });
       } else {
         print("Mode data is null");
@@ -93,19 +93,16 @@ class _TempPageState extends State<TempPage> {
   void _toggleMode(bool manualMode) async {
     final modeValue = manualMode ? 1 : 0;
 
-    // อัปเดตโหมดใน Firebase
     await FirebaseDatabase.instance.ref('Fib_Buttons/AuTo_Temp').set(modeValue);
 
-    // ถ้าเปลี่ยนจาก Manual → Auto ให้ปิดพ่นหมอก
     if (!manualMode) {
       await FirebaseDatabase.instance.ref('Fib_Buttons/ON_OFF_Temp').set(0);
 
       setState(() {
-        isFogOn = false; // อัปเดต UI ทันที
+        isFogOn = false;
       });
     }
 
-    // อัปเดตสถานะโหมด
     setState(() {
       isManualMode = manualMode;
     });
@@ -134,7 +131,6 @@ class _TempPageState extends State<TempPage> {
 
     return Column(
       children: [
-        // วงกลมอุณหภูมิ
         Stack(
           alignment: Alignment.center,
           children: [
@@ -227,20 +223,18 @@ class _TempPageState extends State<TempPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      'อุณหภูมิ (°C)', // หัวข้อใหม่
+                      'อุณหภูมิ (°C)',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 24),
-                    // วงกลมแสดงความชื้นดินเท่านั้น
                     _buildTemperatureCircle(label: 'อุณหภูมิ', value: airTemp),
                     SizedBox(height: 20),
                   ],
                 ),
               ),
             ),
-            // แสดงสถานะพ่นหมอก
             SizedBox(height: 20),
             if (isManualMode)
               Card(
@@ -294,7 +288,6 @@ class _TempPageState extends State<TempPage> {
               ),
             SizedBox(height: 20),
 
-            // ตั้งค่าอุณหภูมิเป้าหมาย
             Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16)),
@@ -345,7 +338,7 @@ class _TempPageState extends State<TempPage> {
                     double.tryParse(_desiredTempController.text);
                 if (enteredTemp != null) {
                   FirebaseDatabase.instance.ref('FibTemp').set(enteredTemp);
-                  triggerFirebaseButton(); // เรียกฟังก์ชันกดปุ่ม Firebase
+                  triggerFirebaseButton();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('บันทึกค่าอุณหภูมิเรียบร้อยแล้ว'),
