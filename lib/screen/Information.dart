@@ -272,7 +272,7 @@ class _InformationState extends State<Information> {
       final data = event.snapshot.value;
       if (data != null && data is num) {
         setState(() {
-          // ใช้ toInt() เพื่อลบจุดทศนิยมออก
+        
           humidityZone1 = data.toInt().toDouble();
         });
       }
@@ -574,7 +574,7 @@ class _InformationState extends State<Information> {
               ),
 
               SizedBox(height: 20),
-              // ส่วนที่แสดงข้อมูลของ Zone 1, Zone 2, Zone 3
+             
               GestureDetector(
                 onTap: () async {
                   bool? result = await Navigator.push(
@@ -873,7 +873,6 @@ class _InformationState extends State<Information> {
   }
 }
 
-// ✅ วงกลมแสดงอุณหภูมิ
 class TemperatureCircle extends StatelessWidget {
   final double temperature;
   TemperatureCircle({required this.temperature});
@@ -893,7 +892,6 @@ class TemperatureCircle extends StatelessWidget {
   }
 }
 
-// ✅ คอนเทนเนอร์แสดงข้อมูล Zone ต่างๆ
 class ZoneContainer extends StatelessWidget {
   final String zoneName;
   final double humidity;
@@ -1029,7 +1027,7 @@ class ZoneContainer extends StatelessWidget {
                     color: Colors.black87,
                   ),
                 ),
-              const SizedBox(height: 18), // ระยะห่างระหว่างวงกลม
+              const SizedBox(height: 18), 
               Container(
                 width: 130,
                 height: 130,
