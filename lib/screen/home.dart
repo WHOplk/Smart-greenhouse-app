@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Information.dart'; // นำเข้า main_screen.dart
+import 'Information.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
