@@ -14,7 +14,7 @@ class Zone2Page extends StatefulWidget {
 class _Zone2PageState extends State<Zone2Page> {
   bool isWaterOn = false;
   double targetHumidity = 0.0;
-  double humidity = 0.0; // ประกาศตัวแปร humidity
+  double humidity = 0.0;
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _openWaterController = TextEditingController();
   final TextEditingController _closeWaterController = TextEditingController();
@@ -38,7 +38,7 @@ class _Zone2PageState extends State<Zone2Page> {
   void triggerFirebaseButton() async {
     final ref = FirebaseDatabase.instance.ref('Fib_Buttons/Fib_Button2');
 
-    await ref.set(64); // ส่งค่า 1
+    await ref.set(64);
   }
 
   void _loadFibTimestartZ2() async {
@@ -79,7 +79,7 @@ class _Zone2PageState extends State<Zone2Page> {
       final modeValue = event.snapshot.value;
       if (modeValue != null) {
         setState(() {
-          isManualMode = modeValue.toString() == '1'; // 1 = Manual, 0 = Auto
+          isManualMode = modeValue.toString() == '1';
         });
       } else {
         print("Mode data is null");
@@ -103,16 +103,15 @@ class _Zone2PageState extends State<Zone2Page> {
 
   void _loadCurrentHumidityFromFirebase() async {
     DatabaseReference ref =
-        FirebaseDatabase.instance.ref('Soil_Bs'); // ใช้ path ที่ถูกต้อง
+        FirebaseDatabase.instance.ref('Soil_Bs');
 
     ref.onValue.listen((event) {
       final data = event.snapshot.value;
       if (data != null && data is num) {
         setState(() {
-          humidity = data.toDouble(); // อัปเดตค่าความชื้นจาก Firebase
+          humidity = data.toDouble();
         });
       } else {
-        // ถ้าค่าเป็น null หรือไม่ใช่ตัวเลข
         print("Invalid data or data is null");
       }
     });
@@ -135,13 +134,11 @@ class _Zone2PageState extends State<Zone2Page> {
     });
   }
 
-  // ✅ บันทึกโหมด Manual / Auto ลง SharedPreferences
   void _saveMode(bool manualMode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isManualModeZone2', manualMode);
   }
 
-// ✅ โหลดโหมด Manual / Auto ที่บันทึกไว้
   void _loadMode() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -196,7 +193,7 @@ class _Zone2PageState extends State<Zone2Page> {
   void sendWaterStatus(bool turnOn) {
     FirebaseDatabase.instance
         .ref('Fib_Buttons/ON_OFF_Z2')
-        .set(turnOn ? 1 : 0); // 1 = เปิดน้ำ, 0 = ปิดน้ำ
+        .set(turnOn ? 1 : 0);
 
     setState(() {
       isWaterOn = turnOn;
@@ -214,7 +211,6 @@ class _Zone2PageState extends State<Zone2Page> {
 
     _saveMode(manualMode);
 
-    // ✅ ปิดน้ำทันทีเมื่อเปลี่ยนจาก Manual → Auto
     if (!manualMode) {
       sendWaterStatus(false);
       _saveWaterStatus(false);
@@ -261,7 +257,7 @@ class _Zone2PageState extends State<Zone2Page> {
               width: 160,
               height: 160,
               child: CircularProgressIndicator(
-                value: (value / 100).clamp(0.0, 1.0), // 0–1
+                value: (value / 100).clamp(0.0, 1.0),
                 strokeWidth: 14,
                 backgroundColor: Colors.grey.shade300,
                 valueColor: AlwaysStoppedAnimation(_humidityColor(value)),
@@ -340,14 +336,13 @@ class _Zone2PageState extends State<Zone2Page> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      'ความชื้นในดิน (%)', // หัวข้อใหม่
+                      'ความชื้นในดิน (%)',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 24),
 
-                    // วงกลมแสดงความชื้นดินเท่านั้น
                     _buildHumidityCircle(label: 'ดิน', value: humidity),
                   ],
                 ),
@@ -502,7 +497,6 @@ class _Zone2PageState extends State<Zone2Page> {
                     borderRadius: BorderRadius.circular(12)),
               ),
               onPressed: () {
-                // 1. บันทึกค่าความชื้น
                 double enteredHumidity =
                     double.tryParse(_controller.text) ?? 0.0;
                 setState(() {
@@ -511,11 +505,9 @@ class _Zone2PageState extends State<Zone2Page> {
                       'ค่าความชื้นที่ตั้งไว้: ${enteredHumidity.toStringAsFixed(0)}%';
                 });
                 _saveTargetHumidity(enteredHumidity);
-
-                // 2. บันทึกเวลาเปิด/ปิดน้ำ
+ำ
                 _saveWaterTimer();
 
-                // 3. แสดง SnackBar หรือข้อความยืนยัน
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('บันทึกค่าความชื้นและเวลาเรียบร้อยแล้ว'),
